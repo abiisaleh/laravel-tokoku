@@ -92,6 +92,8 @@ class ViewProduct extends Component implements HasForms, HasActions
                 'class' => 'w-full',
             ])
             ->action(function () {
+                if (!auth()->check())
+                    return redirect('admin/login');
                 $order = Order::create([
                     'user_id' => auth()->id(),
                     'items' => [
