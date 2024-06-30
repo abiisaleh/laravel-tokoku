@@ -23,7 +23,7 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                Forms\components\Select::make('status')
+                Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'pending',
                         'canceled' => 'canceled',
@@ -41,7 +41,7 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('tujuan'),
                 Tables\Columns\TextColumn::make('total'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')->badge(),
             ])
             ->filters([
                 //
