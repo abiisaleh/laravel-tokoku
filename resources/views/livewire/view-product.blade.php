@@ -1,6 +1,6 @@
 <div class="grid sm:grid-cols-2 gap-4 mx-auto max-w-2xl py-6 sm:py-8 lg:max-w-7xl">
     <div>
-        <img src="https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg"
+        <img src="/storage/{{$product->gambar}}"
             alt="Two each of gray, white, and black shirts laying flat."
             class="h-full w-full aspect-1 object-cover object-center rounded-xl">
     </div>
