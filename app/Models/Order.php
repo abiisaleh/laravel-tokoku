@@ -23,10 +23,8 @@ class Order extends Model
         );
     }
 
-    protected function nama(): Attribute
+    public function user(): 
     {
-        return Attribute::make(
-            get: fn () => $this->cart->first()->user->name,
-        );
+         return $this->belongsTo(User::class);
     }
 }
