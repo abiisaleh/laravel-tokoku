@@ -56,7 +56,7 @@ class Order extends Component implements HasForms, HasActions
     {
         return Action::make('download')
             ->label('Download bukti pembayaran')
-            ->action(null)
+            ->url('/storage/'.$this->order->gambar)
             ->color('primary')
             ->size('lg')
             ->extraAttributes(['class' => 'w-full']);
