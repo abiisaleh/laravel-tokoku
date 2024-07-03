@@ -65,7 +65,7 @@ Forms\Components\Select::make('status')
     public static function table(Table $table): Table
     {
         return $table
-            ->query($this->model->where('status','!=','pending') 
+            ->query($this->model->where('status','!=','pending'))
             ->columns([
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('tujuan'),
