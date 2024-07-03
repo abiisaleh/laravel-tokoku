@@ -137,7 +137,6 @@ class Checkout extends Component implements HasForms
 
                             FileUpload::make('bukti_pembayaran')
                                 ->required()
-                                ->label('Bukti transfer')
                                 ->image()
                                 ->helperText('Harap mengupload bukti transfer pesanan ke nomomor rekening diatas')
                         ])
