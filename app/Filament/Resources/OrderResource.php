@@ -109,4 +109,9 @@ return static::getModel()::where('status','new')->count();
 
 }
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
 }
