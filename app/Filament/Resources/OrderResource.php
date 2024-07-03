@@ -25,6 +25,10 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
 
+    protected static ?string $navigationGroup = 'Shop';
+     
+    protected static ?int $navigationSort = 3;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -95,4 +99,13 @@ Forms\Components\Select::make('status')
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+
+{
+
+return static::getModel()::where('status','new')->count();
+
+}
+
 }
