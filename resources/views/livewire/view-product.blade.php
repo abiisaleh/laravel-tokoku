@@ -24,11 +24,13 @@
 
                 {{ $this->buy }}
 
-                <x-filament-actions::modals />
+                
             </div>
         </div>
 
         <h6 class="font-semibold py-2">Description</h6>
         <p class="py-2">{{ $product->deskripsi }} </p>
     </div>
+
+    <x-filament-actions::modals />
 </div>
