@@ -64,7 +64,7 @@ Forms\Components\Select::make('status')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('tujuan'),
-                Tables\Columns\TextColumn::make('total'),
+                Tables\Columns\TextColumn::make('total')->numeric()->prefix('Rp '),
                 Tables\Columns\TextColumn::make('status')->badge(),
             ])
             ->filters([
