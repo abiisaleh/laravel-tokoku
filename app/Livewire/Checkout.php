@@ -135,7 +135,7 @@ class Checkout extends Component implements HasForms
                                     ->content(Setting::where('key', 'rekening')->first()->value ?? ''),
                             ]),
 
-                            FileUpload::make('gambar')
+                            FileUpload::make('bukti_pembayaran')
                                 ->required()
                                 ->label('Bukti transfer')
                                 ->image()
