@@ -20,7 +20,7 @@ class Orders extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Order::query()-where('status','!=','pending'))
+            ->query(Order::query()->where('status','!=','pending'))
             ->columns([
                 TextColumn::make('created_at')->since(),
                 TextColumn::make('status')->badge(),
