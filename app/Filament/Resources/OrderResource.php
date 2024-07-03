@@ -30,14 +30,12 @@ class OrderResource extends Resource
         return $form
             ->schema([
                 Split::make([
-                    
-                ])
-                Section::make()
-                    ->columns(3)
+                    Section::make()
                     ->schema([
                         Placeholder::make('subtotal_product')->content(fn (Order $record) => number_format($record->subtotal)),
                         Placeholder::make('ongkir')->content(fn (Order $record) => number_format($record->ongkir)),
                         Placeholder::make('total')->content(fn (Order $record) => number_format($record->total)),
+Forms\Components\Select::make('status')
                     ]),
                 Repeater::make('items')
                     ->columns(3)
@@ -52,7 +50,7 @@ class OrderResource extends Resource
                         TextInput::make('qty')
                             ->disabled(),
                     ]),
-                Forms\Components\Select::make('status')
+                ])
                     ->options(OrderStatus::class)
                     ->required()
                     ->native(false)
