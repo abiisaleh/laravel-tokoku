@@ -1,7 +1,6 @@
 <div class="grid sm:grid-cols-2 gap-4 mx-auto max-w-2xl py-6 sm:py-8 lg:max-w-7xl">
     <div>
-        <img src="/storage/{{$product->gambar}}"
-            alt="Two each of gray, white, and black shirts laying flat."
+        <img src="/storage/{{ $product->gambar }}" alt="Two each of gray, white, and black shirts laying flat."
             class="h-full w-full aspect-1 object-cover object-center rounded-xl">
     </div>
     <div class="px-2">
@@ -30,12 +29,6 @@
         </div>
 
         <h6 class="font-semibold py-2">Description</h6>
-        <p class="py-2">{{ $product->detail }} The Zip Tote Basket is the perfect midpoint between
-            shopping
-            tote and comfy backpack. With convertible straps, you can hand carry, should sling, or
-            backpack this
-            convenient and spacious bag. The zip top and durable canvas construction keeps your goods
-            protected
-            for all-day use.</p>
+        <p class="py-2">{{ $product->deskripsi }} </p>
     </div>
 </div>

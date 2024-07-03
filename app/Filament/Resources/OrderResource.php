@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
@@ -24,13 +25,9 @@ class OrderResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('status')
-                    ->options([
-                        'pending' => 'pending',
-                        'canceled' => 'canceled',
-                        'paid' => 'paid',
-                        'shipping' => 'shipping',
-                        'delivered' => 'delivered'
-                    ])->required()
+                    ->options(OrderStatus::class)
+                    ->required()
+                    ->native(false)
             ]);
     }
 

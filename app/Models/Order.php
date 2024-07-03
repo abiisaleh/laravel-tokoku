@@ -16,15 +16,8 @@ class Order extends Model
         'items' => 'array'
     ];
 
-    protected function total(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->subtotal + $this->ongkir,
-        );
-    }
-
     public function user()
     {
-         return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 }

@@ -23,7 +23,7 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\FileUpload::make('gambar')->image()->imageCropAspectRatio('1:1')->columnSpanFull(),
+                Forms\Components\FileUpload::make('gambar')->image()->imageCropAspectRatio('1:1')->columnSpanFull()->disk('public')->visibility('public'),
                 Forms\Components\TextInput::make('nama')->required(),
                 Forms\Components\Select::make('category_id')->relationship('category', 'nama')->required(),
                 Forms\Components\TextInput::make('harga')->required()->numeric()->step(1000)->prefix('Rp'),

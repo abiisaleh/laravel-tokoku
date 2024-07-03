@@ -39,7 +39,7 @@ class ViewProduct extends Component implements HasForms, HasActions
             ->hiddenLabel()
             ->icon('heroicon-s-shopping-cart')
             ->action(function () {
-if (!auth()->check())
+                if (!auth()->check())
                     return redirect('admin/login');
                 $cart = Order::where('status', 'pending')->first();
 

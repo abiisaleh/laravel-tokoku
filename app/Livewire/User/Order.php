@@ -3,6 +3,10 @@
 namespace App\Livewire\User;
 
 use App\Models\Order as ModelsOrder;
+use App\Models\Product;
+use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Get;
@@ -14,39 +18,48 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Infolists\Contracts\HasInfolists;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Livewire\Component;
 
-class Order extends Component implements HasForms, HasInfolists
+class Order extends Component implements HasForms, HasActions
 {
 
     use InteractsWithForms;
-    use InteractsWithInfolists;
+    use InteractsWithActions;
 
     public ModelsOrder $order;
 
-    public function productInfolist(Infolist $infolist): Infolist
+    public function getProductImage(int $productId)
     {
-        return $infolist
-            ->record($this->order)
-            ->schema([
-                Split::make([
-                    RepeatableEntry::make('items')
-                        ->schema([
-                            TextEntry::make('product'),
-                            TextEntry::make('qty'),
-                            TextEntry::make('harga'),
-                        ])
-                        ->columns(3),
-                    Section::make('Order detail')
-                        ->schema([
-                            TextEntry::make('tujuan'),
-                            TextEntry::make('subtotal')->numeric()->prefix('Rp '),
-                            TextEntry::make('ongkir')->numeric()->prefix('Rp '),
-                            ImageEntry::make('bukti_pembayaran')
-                        ])
-                ])
+        return '/storage/' . Product::find($productId)->gambar;
+    }
 
-            ]);
+    public function cancelAction(): Action
+    {
+        return Action::make('cancel')
+            ->requiresConfirmation()
+            ->color('danger')
+            ->size('lg')
+            ->extraAttributes(['class' => 'w-full'])
+            ->outlined()
+            ->action(function () {
+                $this->order->update(['status' => 'canceled']);
+
+                Notification::make()
+                    ->title('Order canceled')
+                    ->danger()
+                    ->send();
+            });
+    }
+
+    public function downloadAction(): Action
+    {
+        return Action::make('download')
+            ->label('Download bukti pembayaran')
+            ->action(null)
+            ->color('primary')
+            ->size('lg')
+            ->extraAttributes(['class' => 'w-full']);
     }
 
     public function render()
