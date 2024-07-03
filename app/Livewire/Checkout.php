@@ -166,7 +166,7 @@ class Checkout extends Component implements HasForms
             'ongkir' => State::find($this->form->getState()['kecamatan'])->ongkir,
             'tujuan' => $this->form->getState()['alamat'] . ', Kec. ' . State::find($this->form->getState()['kecamatan'])->kecamatan,
             'items' => $this->data['items'],
-            'bukti_pembayaran' => $this->data['bukti_pembayaran'],
+            'bukti_pembayaran' => $this->form->getState()['bukti_pembayaran'],
         ];
 
         $this->order->update($order);
