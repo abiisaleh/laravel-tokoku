@@ -176,11 +176,13 @@ class Checkout extends Component implements HasForms
             'alamat' => $this->form->getState()['alamat'],
         ]);
 
-        return \Filament\Notifications\Notification::make()
+         \Filament\Notifications\Notification::make()
             ->title('Pesanan berhasil dibuat')
             ->icon('heroicon-s-shopping-cart')
             ->iconColor('success')
             ->send();
+            
+            return redirect('/user/order/'.$this->order->id);
     }
 
     public function render()
