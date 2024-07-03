@@ -7,6 +7,11 @@ use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Split;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -24,6 +29,29 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
+                Split::make([
+                    
+                ])
+                Section::make()
+                    ->columns(3)
+                    ->schema([
+                        Placeholder::make('subtotal_product')->content(fn (Order $record) => number_format($record->subtotal)),
+                        Placeholder::make('ongkir')->content(fn (Order $record) => number_format($record->ongkir)),
+                        Placeholder::make('total')->content(fn (Order $record) => number_format($record->total)),
+                    ]),
+                Repeater::make('items')
+                    ->columns(3)
+                    ->addable(false)
+                    ->deletable(false)
+                    ->orderColumn(false)
+                    ->schema([
+                        TextInput::make('product')
+                            ->disabled(),
+                        TextInput::make('harga')
+                            ->disabled(),
+                        TextInput::make('qty')
+                            ->disabled(),
+                    ]),
                 Forms\Components\Select::make('status')
                     ->options(OrderStatus::class)
                     ->required()
