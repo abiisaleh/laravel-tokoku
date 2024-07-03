@@ -36,6 +36,9 @@ class OrderResource extends Resource
                         Placeholder::make('ongkir')->content(fn (Order $record) => number_format($record->ongkir)),
                         Placeholder::make('total')->content(fn (Order $record) => number_format($record->total)),
 Forms\Components\Select::make('status')
+->options(OrderStatus::class)
+                    ->required()
+                    ->native(false)
                     ]),
                 Repeater::make('items')
                     ->columns(3)
@@ -51,9 +54,7 @@ Forms\Components\Select::make('status')
                             ->disabled(),
                     ]),
                 ])
-                    ->options(OrderStatus::class)
-                    ->required()
-                    ->native(false)
+                    
             ]);
     }
 
