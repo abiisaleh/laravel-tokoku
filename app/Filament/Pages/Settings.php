@@ -30,6 +30,8 @@ class Settings extends Page implements HasForms, HasTable
 
     protected static string $view = 'filament.pages.settings';
 
+    protected static ?int $navigationSort = 5;
+
     public function mount()
     {
         $this->form->fill();

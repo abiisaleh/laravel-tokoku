@@ -9,6 +9,12 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Column;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,7 +26,7 @@ class ProductResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-cube';
 
     protected static ?string $navigationGroup = 'Shop';
-    
+
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -41,12 +47,15 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama'),
+                Tables\Columns\ImageColumn::make('gambar')->circular()->grow(false),
+                Tables\Columns\TextColumn::make('nama')->searchable()->description(fn (Product $record) => $record->category->nama),
                 Tables\Columns\TextColumn::make('harga')->numeric()->prefix('Rp '),
-                Tables\Columns\TextColumn::make('stok')->numeric()
+                Tables\Columns\TextColumn::make('stok')->numeric(),
             ])
             ->filters([
-                //
+                SelectFilter::make('category')
+                    ->relationship('category', 'nama')
+                    ->preload()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

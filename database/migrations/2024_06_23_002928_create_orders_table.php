@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->nullable()->constrained()->nullOnDelete()->cascadeOnUpdate();
-            $table->enum('status', ['new', 'canceled', 'processing', 'shipped', 'delivered', 'pending'])->default('pending');
+            $table->enum('status', ['new', 'cancelled', 'processing', 'shipped', 'delivered'])->default('new');
             $table->integer('subtotal')->nullable();
             $table->integer('ongkir')->nullable();
             $table->integer('total')->virtualAs('subtotal + ongkir');

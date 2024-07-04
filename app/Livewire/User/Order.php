@@ -43,7 +43,7 @@ class Order extends Component implements HasForms, HasActions
             ->extraAttributes(['class' => 'w-full'])
             ->outlined()
             ->action(function () {
-                $this->order->update(['status' => 'canceled']);
+                $this->order->update(['status' => 'cancelled']);
 
                 Notification::make()
                     ->title('Order canceled')
@@ -56,7 +56,7 @@ class Order extends Component implements HasForms, HasActions
     {
         return Action::make('download')
             ->label('Download bukti pembayaran')
-            ->url('/storage/'.$this->order->bukti_pembayaran)
+            ->url('/storage/' . $this->order->bukti_pembayaran)
             ->color('primary')
             ->size('lg')
             ->extraAttributes(['class' => 'w-full']);
