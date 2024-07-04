@@ -58,7 +58,7 @@ class OrderResource extends Resource
                         ->headerActions([
                             Forms\Components\Actions\Action::make('lihat_bukti_pembayaran')
                                 ->openUrlInNewTab()
-                                ->link(fn (Order $order) => '/storage/' . $order->bukti_pembayaran)
+                                ->url(fn (Order $order) => '/storage/' . $order->bukti_pembayaran)
                         ])
                         ->schema([
                             Placeholder::make('created_at')
