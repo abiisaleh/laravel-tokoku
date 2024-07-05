@@ -8,6 +8,7 @@ use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\ColumnGroup;
@@ -37,7 +38,7 @@ class ProductResource extends Resource
                 Forms\Components\FileUpload::make('gambar')->image()->imageCropAspectRatio('1:1')->columnSpanFull()->disk('public')->visibility('public'),
                 Forms\Components\TextInput::make('nama')->required(),
                 Forms\Components\Select::make('category_id')->relationship('category', 'nama')->required(),
-                Forms\Components\TextInput::make('harga')->required()->numeric()->step(1000)->prefix('Rp'),
+                Forms\Components\TextInput::make('harga')->required()->numeric()->prefix('Rp'),
                 Forms\Components\TextInput::make('stok')->required()->default(1)->numeric(),
                 Forms\Components\Textarea::make('deskripsi')->required()->columnSpanFull()->rows(5),
 
