@@ -20,6 +20,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@demo.com'
         ]);
 
+        \App\Models\User::factory()->create([
+            'name' => 'John Doe',
+            'email' => 'johndoe@demo.com'
+        ]);
+
         DB::table('categories')->insert([
             ['nama' => 'makanan'],
             ['nama' => 'minuman'],

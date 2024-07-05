@@ -3,6 +3,7 @@
 namespace App\Livewire\User;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -20,16 +21,14 @@ class Cart extends Component implements HasForms, HasActions
     use InteractsWithForms;
     use InteractsWithActions;
 
-    public ?Order $order;
-
     public ?array $data = [];
 
     public function mount(): void
     {
-        $this->order = Order::where('status', 'pending')->first();
+        $items = OrderItem::whereNull('order_id')->whereBelongsTo(auth()->user())->get();
 
-        if ($this->order)
-            $this->data = Order::where('status', 'pending')->first()->toArray();
+        if ($items)
+            $this->data['items'] = $items->toArray();
     }
 
     public function cart(): Action
@@ -43,11 +42,12 @@ class Cart extends Component implements HasForms, HasActions
             ->hiddenLabel()
             ->fillForm($this->data)
             ->modalSubmitActionLabel('Checkout')
-            ->modalSubmitAction($this->data == [] ? false : null)
+            ->modalSubmitAction($this->data['items'] == [] ? false : null)
             ->modalCancelAction(false)
             ->form(function () {
+                $this->mount();
 
-                if ($this->data == [])
+                if ($this->data['items'] == [])
                     $form = [
                         Placeholder::make('Product belum ditambahkan')
                     ];
@@ -59,19 +59,15 @@ class Cart extends Component implements HasForms, HasActions
                             ->addable(false)
                             ->columns(3)
                             ->reorderable(false)
-                            ->afterStateUpdated(function ($state) {
-                                $this->order->items = $state;
-                                $this->order->save();
-                                $this->mount();
-                            })
+                            ->key('id')
                             ->schema([
-                                TextInput::make('harga')->disabled()->prefix('Rp'),
+                                TextInput::make('harga')
+                                    ->prefix('Rp')
+                                    ->readOnly(),
 
                                 TextInput::make('qty')
                                     ->numeric()
-                                    ->maxValue(10)
-                                    ->minValue(1)
-                                    ->live(),
+                                    ->readOnly(),
 
                                 Placeholder::make('subtotal')
                                     ->content(fn (Get $get) => 'Rp ' . number_format($get('qty') *  $get('harga')))
@@ -83,7 +79,16 @@ class Cart extends Component implements HasForms, HasActions
                 return $form;
             })
             ->action(function () {
-                return redirect('checkout/' . $this->data['id']);
+                $items = OrderItem::where('order_id', null)->whereBelongsTo(auth()->user());
+
+                $order = Order::create([
+                    'user_id' => auth()->id(),
+                    'subtotal' => $items->sum('subtotal')
+                ]);
+
+                $items->update(['order_id' => $order->id]);
+
+                return redirect('checkout/' . $order->id);
             });
     }
 

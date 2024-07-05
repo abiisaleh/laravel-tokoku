@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\State;
 use Filament\Actions\Action;
@@ -41,40 +42,24 @@ class ViewProduct extends Component implements HasForms, HasActions
             ->action(function () {
                 if (!auth()->check())
                     return redirect('admin/login');
-                $cart = Order::where('status', 'pending')->first();
 
-                if ($cart === null) {
-                    Order::create([
-                        'user_id' => auth()->id() ?? 1,
-                        'items' => [
-                            [
-                                'id' => $this->product->id,
-                                'product' => $this->product->nama,
-                                'harga' => $this->product->harga,
-                                'qty' => 1,
-                            ]
-                        ]
-                    ]);
-                } else {
-                    $items = collect($cart->items);
+                //cek jika product sudah ditambahkan tambahkan stok saja
+                $item = OrderItem::where('order_id', null)
+                    ->where('product_id', $this->product->id)
+                    ->where('user_id', auth()->id())
+                    ->first();
 
-                    if ($items->where('id', $this->product->id)->isNotEmpty())
-                        return \Filament\Notifications\Notification::make()
-                            ->title('Item sudah ditambahkan')
-                            ->icon('heroicon-s-shopping-cart')
-                            ->iconColor('info')
-                            ->send();
-
-                    $items->add([
-                        'id' => $this->product->id,
+                if ($item != []) {
+                    $item->qty += 1;
+                    $item->save();
+                } else
+                    OrderItem::create([
+                        'product_id' => $this->product->id,
+                        'user_id' => auth()->id(),
                         'product' => $this->product->nama,
                         'harga' => $this->product->harga,
                         'qty' => 1,
                     ]);
-
-                    $cart->items = $items->toArray();
-                    $cart->save();
-                }
 
                 return \Filament\Notifications\Notification::make()
                     ->title('Item ditambahkan')
@@ -96,17 +81,20 @@ class ViewProduct extends Component implements HasForms, HasActions
             ->action(function () {
                 if (!auth()->check())
                     return redirect('admin/login');
+
                 $order = Order::create([
                     'user_id' => auth()->id(),
-                    'items' => [
-                        [
-                            'id' => $this->product->id,
-                            'product' => $this->product->nama,
-                            'harga' => $this->product->harga,
-                            'qty' => 1,
-                        ]
-                    ]
                 ]);
+
+                OrderItem::create([
+                    'product_id' => $this->product->id,
+                    'user_id' => auth()->id(),
+                    'order_id' => $order->id,
+                    'product' => $this->product->nama,
+                    'harga' => $this->product->harga,
+                    'qty' => 1,
+                ]);
+
                 return redirect('checkout/' . $order->id);
             });
     }

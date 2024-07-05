@@ -84,22 +84,30 @@ class OrderResource extends Resource
                     ->columns(),
 
                 Repeater::make('items')
+                    ->relationship('items')
                     ->columnSpanFull()
                     ->hiddenLabel()
-                    ->columns(3)
+                    ->columns()
                     ->addable(false)
                     ->deletable(false)
                     ->orderColumn(false)
                     ->schema([
                         TextInput::make('product')
                             ->readOnly(),
-                        TextInput::make('harga')
-                            ->mask(RawJs::make('$money($input)'))
-                            ->stripCharacters(',')
-                            ->prefix('Rp')
-                            ->readOnly(),
-                        TextInput::make('qty')
-                            ->readOnly(),
+                        Group::make([
+                            TextInput::make('harga')
+                                ->mask(RawJs::make('$money($input)'))
+                                ->stripCharacters(',')
+                                ->prefix('Rp')
+                                ->readOnly(),
+                            TextInput::make('qty')
+                                ->readOnly(),
+                            TextInput::make('subtotal')
+                                ->mask(RawJs::make('$money($input)'))
+                                ->stripCharacters(',')
+                                ->prefix('Rp')
+                                ->readOnly(),
+                        ])->columns(3)
                     ])
             ]);
     }
@@ -107,13 +115,14 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Order::query()->where('status', '!=', 'pending'))
+            ->query(Order::where('total', '!=', 0))
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Pelanggan')
                     ->description(fn (Order $record) => $record->tujuan),
                 Tables\Columns\TextColumn::make('total')->numeric()->prefix('Rp '),
                 Tables\Columns\TextColumn::make('status')->badge(),
+                Tables\Columns\TextColumn::make('created_at')->since()->sortable(),
             ])
             ->filters([
                 //
@@ -147,7 +156,7 @@ class OrderResource extends Resource
     public static function getNavigationBadge(): ?string
 
     {
-        return static::getModel()::where('status', 'new')->count();
+        return static::getModel()::where('total', '!=', 0)->where('status', 'new')->count();
     }
 
     public static function canCreate(): bool

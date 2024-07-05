@@ -13,7 +13,7 @@
                 <div class="flex flex-shrink-0 items-center">
                     <a href="/" class="text-white font-semibold text-xl mt-1">{{ config('app.name') }}</a>
                 </div>
-                <div class="ml-6 block">
+                <div class="ml-6 sm:block hidden">
                     <form action="/search">
                         <div class="flex space-x-4">
                             <x-ui.input />

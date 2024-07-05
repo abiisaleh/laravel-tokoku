@@ -14,7 +14,7 @@ class StatOverview extends BaseWidget
     {
         $totalIncome = Order::all()->sum('total');
         $users = User::all()->count() - 1;
-        $orders = Order::all()->count();
+        $orders = Order::where('total', '!=', 0)->count();
 
 
         return [

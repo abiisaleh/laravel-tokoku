@@ -14,9 +14,13 @@ class Order extends Model
     use HasFactory;
 
     protected $casts = [
-        'items' => 'array',
         'status' => OrderStatus::class,
     ];
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 
     public function user()
     {

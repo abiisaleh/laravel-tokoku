@@ -19,6 +19,7 @@ class OrderChart extends ChartWidget
         {
             $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             Order::whereYear('created_at', now()->year)
+                ->where('total', '!=', 0)
                 ->where('status', $label)
                 ->selectRaw('MONTH(created_at) as bulan, SUM(total) as total_biaya')
                 ->groupBy('bulan')

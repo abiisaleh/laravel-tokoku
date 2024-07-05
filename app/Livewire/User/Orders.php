@@ -20,9 +20,9 @@ class Orders extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Order::query()->where('status','!=','pending'))
+            ->query(Order::query()->whereBelongsTo(auth()->user())->where('total', '!=', 0))
             ->columns([
-                TextColumn::make('created_at')->since(),
+                TextColumn::make('created_at')->since()->sortable(),
                 TextColumn::make('status')->badge(),
                 TextColumn::make('total')->numeric()->prefix('Rp '),
             ])

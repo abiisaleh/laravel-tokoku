@@ -37,6 +37,7 @@ class Checkout extends Component implements HasForms
     {
         $this->title = 'Checkout #' . $this->order->id;
         $this->data = $this->order->toArray();
+        $this->data['items'] = $this->order->items;
         $this->data['alamat'] = auth()->user()->alamat;
         $this->data['kecamatan'] = auth()->user()->state_id;
 
@@ -155,34 +156,26 @@ class Checkout extends Component implements HasForms
 
     public function submit()
     {
-        $subtotal = 0;
 
-        foreach ($this->data['items'] as $items)
-            $subtotal += $items['harga'] * $items['qty'];
+        $this->order->bukti_pembayaran = $this->form->getState()['bukti_pembayaran'];
+        $this->order->subtotal = $this->order->items->sum('subtotal');
+        $this->order->ongkir = State::find($this->form->getState()['kecamatan'])->ongkir;
+        $this->order->tujuan = $this->form->getState()['alamat'] . ', Kec. ' . State::find($this->form->getState()['kecamatan'])->kecamatan;
 
-        $order = [
-            'status' => 'new',
-            'subtotal' => $subtotal,
-            'ongkir' => State::find($this->form->getState()['kecamatan'])->ongkir,
-            'tujuan' => $this->form->getState()['alamat'] . ', Kec. ' . State::find($this->form->getState()['kecamatan'])->kecamatan,
-            'items' => $this->data['items'],
-            'bukti_pembayaran' => $this->form->getState()['bukti_pembayaran'],
-        ];
-
-        $this->order->update($order);
+        $this->order->save();
 
         User::find(auth()->id())->update([
             'state_id' => $this->form->getState()['kecamatan'],
             'alamat' => $this->form->getState()['alamat'],
         ]);
 
-         \Filament\Notifications\Notification::make()
+        \Filament\Notifications\Notification::make()
             ->title('Pesanan berhasil dibuat')
             ->icon('heroicon-s-shopping-cart')
             ->iconColor('success')
             ->send();
-            
-            return redirect('/user/order/'.$this->order->id);
+
+        return redirect('/user/order/' . $this->order->id);
     }
 
     public function render()
