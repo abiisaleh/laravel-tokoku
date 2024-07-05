@@ -17,6 +17,13 @@ class Order extends Model
         'status' => OrderStatus::class,
     ];
 
+    protected function pelanggan(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->user->name,
+        );
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
