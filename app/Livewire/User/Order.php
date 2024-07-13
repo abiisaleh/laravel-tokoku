@@ -31,7 +31,7 @@ class Order extends Component implements HasForms, HasActions
 
     public function getProductImage(int $productId)
     {
-        return '/storage/' . Product::find($productId)->gambar;
+        return '/storage/' . Product::find($productId)->gambar ?? 'notfound.jpg';
     }
 
     public function cancelAction(): Action
