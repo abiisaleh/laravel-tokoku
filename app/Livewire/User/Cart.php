@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
@@ -55,12 +56,30 @@ class Cart extends Component implements HasForms, HasActions
                 else
                     $form = [
                         Repeater::make('items')
+                            ->afterStateUpdated(function ($state) {
+
+                                $items = OrderItem::whereNull('order_id')->whereBelongsTo(auth()->user())->get();
+
+                                foreach ($items as $item) {
+                                    if ($state == [])
+                                        return OrderItem::whereNull('order_id')->whereBelongsTo(auth()->user())->delete();
+
+                                    foreach ($state as $cart) {
+                                        if ($item->id != $cart['id'])
+                                            $item->delete();
+                                    }
+                                }
+
+                                $this->mount();
+                            })
                             ->hiddenLabel()
                             ->addable(false)
                             ->columns(3)
                             ->reorderable(false)
                             ->key('id')
                             ->schema([
+                                Hidden::make('id'),
+
                                 TextInput::make('harga')
                                     ->prefix('Rp')
                                     ->readOnly(),
